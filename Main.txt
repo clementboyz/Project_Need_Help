@@ -1,0 +1,121 @@
+from flask import Flask, render_template, request, redirect, url_for
+
+
+import shelve
+from Record import Record
+from AddRecordForm import *
+from Plan import Plan
+from AddPlanForm import *
+
+
+
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def index():
+    return render_template('home.html')
+
+@app.route('/hotspots')
+def hotspots():
+    return render_template('hotspots.html')
+
+@app.route('/record', methods=['GET', 'POST'])
+def record():
+    form = AddRecordForm(request.form)
+    #map = maps()
+    print('The method is ' + request.method)
+    if request.method == 'POST':
+        print('region ' + form.region.data)
+        #if form.validate() == False:
+            #print('All fields are required.')
+        #else:
+        recordList = {}
+        db = shelve.open('storage.db', 'c')
+        try:
+            recordList = db['Records']
+        except:
+                print("fail to open database")
+
+        if form.region.data == "North":
+            route = form.North.data
+        elif form.region.data == "South":
+            route = form.South.data
+        elif form.region.data == "East":
+            route = form.East.data
+        elif form.region.data == "West":
+            route = form.West.data
+        else:
+            route = form.Central.data
+
+        new_record = Record(form.time.data, form.date.data.isoformat(), form.gender.data, form.region.data, route, form.basket.data, form.payment.data)
+        recordList[new_record.get_id()] = new_record
+        db['Records'] = recordList
+        db.close()
+        return redirect(url_for('summary'))
+
+    return render_template('record.html', form=form)
+
+
+
+@app.route('/plan', methods=['GET', 'POST'])
+
+def Plan():
+    form = AddPlanForm(request.form)
+    print('The method is ' + request.method)
+    if request.method == 'POST':
+        if form.validate() == False:
+            print('All fields are required.')
+        else:
+            recordList = {}
+            db = shelve.open('planstorage.db', 'c')
+            try:
+                recordList = db['Records']
+            except:
+                print("fail to open database")
+            new_record = Plan(form.time.data, form.date.data.isoformat(), form.gender.data, form.location.data, form.destination.data, form.basket.data, form.payment.data)
+            recordList[new_record.get_id1()] = new_record
+            db['Records'] = recordList
+            db.close()
+            return redirect(url_for('summary1'))
+
+    return render_template('plan.html', form=form)
+
+
+@app.route('/summary')
+def summary():
+    dictionary = {}
+    db = shelve.open('storage.db', 'r')
+    dictionary = db['Records']
+    db.close()
+
+    # convert dictionry to list
+    list = []
+    for key in dictionary:
+        item = dictionary.get(key)
+        #print("here: ", user.get_userID())
+        #print("here:", user.get_firstname())
+        list.append(item)
+    return render_template('summary.html', records=list, count=len(list))
+
+
+@app.route('/summary1')
+def summary1():
+    dictionary = {}
+    db = shelve.open('planstorage.db', 'r')
+    dictionary = db['Records']
+    db.close()
+
+    # convert dictionry to list
+    list1 = []
+    for key in dictionary:
+        item = dictionary.get(key)
+        #print("here: ", user.get_userID())
+        #print("here:", user.get_firstname())
+        list1.append(item)
+    return render_template('summary1.html', records=list, count=len(list))
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
