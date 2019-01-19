@@ -1,0 +1,61 @@
+dbm.error
+dbm.error: need 'c' or 'n' flag to open new db
+
+Traceback (most recent call last)
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 2309, in __call__
+ 
+    def __call__(self, environ, start_response):
+        """The WSGI server calls the Flask application object as the
+        WSGI application. This calls :meth:`wsgi_app` which can be
+        wrapped to applying middleware."""
+        return self.wsgi_app(environ, start_response)
+ 
+    def __repr__(self):
+        return '<%s %r>' % (
+            self.__class__.__name__,
+            self.name,
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 2295, in wsgi_app
+response = self.handle_exception(e)
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 1741, in handle_exception
+reraise(exc_type, exc_value, tb)
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\_compat.py", line 35, in reraise
+raise value
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 2292, in wsgi_app
+        ctx = self.request_context(environ)
+        error = None
+        try:
+            try:
+                ctx.push()
+                response = self.full_dispatch_request()
+            except Exception as e:
+                error = e
+                response = self.handle_exception(e)
+            except:
+                error = sys.exc_info()[1]
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 1815, in full_dispatch_request
+rv = self.handle_user_exception(e)
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 1718, in handle_user_exception
+reraise(exc_type, exc_value, tb)
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\_compat.py", line 35, in reraise
+raise value
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 1813, in full_dispatch_request
+rv = self.dispatch_request()
+File "C:\Program Files (x86)\Python37-32\lib\site-packages\flask\app.py", line 1799, in dispatch_request
+return self.view_functions[rule.endpoint](**req.view_args)
+File "C:\Users\Ah Tan\PycharmProjects\OOPJ try\untitled2\venv\main.py", line 103, in summary1
+db = shelve.open('planstorage.db', 'r')
+File "C:\Program Files (x86)\Python37-32\lib\shelve.py", line 243, in open
+return DbfilenameShelf(filename, flag, protocol, writeback)
+File "C:\Program Files (x86)\Python37-32\lib\shelve.py", line 227, in __init__
+Shelf.__init__(self, dbm.open(filename, flag), protocol, writeback)
+File "C:\Program Files (x86)\Python37-32\lib\dbm\__init__.py", line 85, in open
+raise error[0]("need 'c' or 'n' flag to open new db")
+dbm.error: need 'c' or 'n' flag to open new db
+The debugger caught an exception in your WSGI application. You can now look at the traceback which led to the error.
+To switch between the interactive traceback and the plaintext one, you can click on the "Traceback" headline. From the text traceback you can also create a paste of it. For code execution mouse-over the frame you want to debug and click on the console icon on the right side.
+
+You can execute arbitrary Python code in the stack frames and there are some extra helpers available for introspection:
+
+dump() shows all variables in the frame
+dump(obj) dumps all that's known about the object
+Brought to you by DON'T PANIC, your friendly Werkzeug powered traceback interpreter.
